@@ -1,2 +1,2 @@
 # bw_remove_charters
-Remove special charteru in BW transformation
+Remove special charters in BW transformation
