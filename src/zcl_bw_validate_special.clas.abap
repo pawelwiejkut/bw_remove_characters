@@ -81,7 +81,8 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
           chavl_not_allowed = 1.
 
       IF sy-subrc <> 0.
-        et_monitor = VALUE #( BASE et_monitor ( msgv1 = |Char { lv_current_char } is unsupported and will be removed|  ) ).
+        et_monitor = VALUE #( BASE et_monitor
+        ( msgv1 = |Char { lv_current_char } is unsupported and will be removed| ) ).
         lv_text+lv_index(1) = ''.
       ENDIF.
 
@@ -135,7 +136,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
 
       APPEND VALUE #( field_name = <ls_comp>-name
                       iobj_name  = lv_iobname
-                      tab_name   = ls_viobj-chktab )  TO mt_objtab.
+                      tab_name   = ls_viobj-chktab ) TO mt_objtab.
 
       APPEND <ls_comp> TO lt_comptab.
 
