@@ -1,5 +1,5 @@
 CLASS zcl_bw_validate_special DEFINITION
-PUBLIC
+  PUBLIC
   FINAL
   CREATE PUBLIC .
 
@@ -11,10 +11,6 @@ PUBLIC
     METHODS constructor
       IMPORTING !ir_ref TYPE REF TO data.
 
-    "! <p class="shorttext synchronized" lang="en">Run validation and remove unsupported special charters</p>
-    "!
-    "! @parameter it_tab | <p class="shorttext synchronized" lang="en"> Income table, to be checked</p>
-    "! @parameter et_tab | <p class="shorttext synchronized" lang="en"> Outcome table, special charters removed</p>
     METHODS validate
       IMPORTING !it_tab     TYPE ANY TABLE
                 !it_monitor TYPE rstr_ty_t_monitors OPTIONAL
@@ -81,8 +77,8 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
           chavl_not_allowed = 1.
 
       IF sy-subrc <> 0.
-        et_monitor = VALUE #( BASE et_monitor
-        ( msgv1 = |Char { lv_current_char } is unsupported and will be removed| ) ).
+        et_monitor =
+            VALUE #( BASE et_monitor ( msgv1 = |Char { lv_current_char } is unsupported and will be removed| ) ).
         lv_text+lv_index(1) = ''.
       ENDIF.
 
@@ -122,17 +118,17 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
       lv_ddname = <ls_comp>-name.
       CALL FUNCTION 'RSD_IOBJNM_GET_FROM_FIELDNM'
         EXPORTING
-          i_ddname   = lv_ddname
+          i_ddname = lv_ddname
         IMPORTING
-          e_name     = lv_iobname.
+          e_name   = lv_iobname.
 
       CALL FUNCTION 'RSD_IOBJ_GET'
         EXPORTING
-          i_iobjnm         = lv_iobname
-          i_objvers        = 'A'
+          i_iobjnm  = lv_iobname
+          i_objvers = 'A'
         IMPORTING
-          e_s_viobj        = ls_viobj
-          e_s_iobj         = ls_iobj.
+          e_s_viobj = ls_viobj
+          e_s_iobj  = ls_iobj.
 
       APPEND VALUE #( field_name = <ls_comp>-name
                       iobj_name  = lv_iobname
