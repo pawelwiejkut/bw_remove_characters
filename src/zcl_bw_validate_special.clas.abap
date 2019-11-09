@@ -11,6 +11,10 @@ CLASS zcl_bw_validate_special DEFINITION
     METHODS constructor
       IMPORTING !ir_ref TYPE REF TO data.
 
+    "! <p class="shorttext synchronized" lang="en">Run validation and remove unsupported special charters</p>
+    "!
+    "! @parameter it_tab | <p class="shorttext synchronized" lang="en"> Income table, to be checked</p>
+    "! @parameter et_tab | <p class="shorttext synchronized" lang="en"> Outcome table, special charters removed</p>
     METHODS validate
       IMPORTING !it_tab     TYPE ANY TABLE
                 !it_monitor TYPE rstr_ty_t_monitors OPTIONAL
