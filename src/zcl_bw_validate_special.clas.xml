@@ -17,7 +17,6 @@
      <CLSNAME>ZCL_BW_VALIDATE_SPECIAL</CLSNAME>
      <CMPNAME>VALIDATE</CMPNAME>
      <LANGU>E</LANGU>
-     <DESCRIPT>Run validation and remove unsupported special charters</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>
