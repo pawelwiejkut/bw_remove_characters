@@ -5,12 +5,21 @@ PUBLIC
 
   PUBLIC SECTION.
 
-    METHODS: constructor
+    "! <p class="shorttext synchronized" lang="en"></p>
+    "! Constructor class used for get fields and infoobjects based on result package reference
+    "! @parameter ir_ref | <p class="shorttext synchronized" lang="en">Reference of result package</p>
+    METHODS constructor
       IMPORTING !ir_ref TYPE REF TO data.
 
-    METHODS: validate
-      IMPORTING !it_tab TYPE ANY TABLE
-      EXPORTING !et_tab TYPE ANY TABLE.
+    "! <p class="shorttext synchronized" lang="en">Run validation and remove unsupported special charters</p>
+    "!
+    "! @parameter it_tab | <p class="shorttext synchronized" lang="en"> Income table, to be checked</p>
+    "! @parameter et_tab | <p class="shorttext synchronized" lang="en"> Outcome table, special charters removed</p>
+    METHODS validate
+      IMPORTING !it_tab     TYPE ANY TABLE
+                !it_monitor TYPE rstr_ty_t_monitors OPTIONAL
+      EXPORTING !et_tab     TYPE ANY TABLE
+                !et_monitor TYPE rstr_ty_t_monitors.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -171,7 +180,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
 
   METHOD validate.
 
-    DATA:lv_cursor TYPE cursor.
+    DATA lv_cursor TYPE cursor.
 
     FIELD-SYMBOLS:
 
