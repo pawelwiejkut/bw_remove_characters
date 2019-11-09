@@ -23,16 +23,16 @@ PUBLIC
         validated  TYPE boolean,
       END OF ty_iboj_tab.
 
-    TYPES: t_ty_range    TYPE RANGE OF ty_iboj_tab-field_name.
+    TYPES: ty_t_range    TYPE RANGE OF ty_iboj_tab-field_name.
 
     DATA:
-      ot_objtab TYPE STANDARD TABLE OF ty_iboj_tab,
-      or_result TYPE REF TO data,
-      or_master TYPE REF TO data.
+      mt_objtab TYPE STANDARD TABLE OF ty_iboj_tab,
+      mr_result TYPE REF TO data,
+      mr_master TYPE REF TO data.
 
     METHODS exclude_tech
       EXPORTING
-        exclude_fields TYPE t_ty_range.
+        et_excl_fields TYPE ty_t_range.
 
     METHODS check_and_replace
       IMPORTING iv_data            TYPE any
@@ -69,7 +69,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
           chavl_not_allowed = 1.
 
       IF sy-subrc <> 0.
-        MOVE '' TO lv_text+lv_index(1).
+        lv_text+lv_index(1) = ''.
       ENDIF.
 
       lv_index = lv_index + 1.
@@ -100,7 +100,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
 
     exclude_tech(
       IMPORTING
-      exclude_fields = lt_excl_names ).
+      et_excl_fields = lt_excl_names ).
 
 
     LOOP AT lr_str->get_components( ) ASSIGNING FIELD-SYMBOL(<ls_comp>) WHERE name NOT IN lt_excl_names.
@@ -115,8 +115,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
           name_error = 1
           OTHERS     = 2.
       IF sy-subrc <> 0.
-        MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
-                   WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+        "todo monitor
       ENDIF.
 
       CALL FUNCTION 'RSD_IOBJ_GET'
@@ -132,13 +131,12 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
           bct_comp_invalid = 3
           OTHERS           = 4.
       IF sy-subrc <> 0.
-        MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
-                   WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+        "todo monitor
       ENDIF.
 
       APPEND VALUE #( field_name = <ls_comp>-name
                       iobj_name  = lv_iobname
-                      tab_name   = ls_viobj-chktab )  TO ot_objtab.
+                      tab_name   = ls_viobj-chktab )  TO mt_objtab.
 
       APPEND <ls_comp> TO lt_comptab.
 
@@ -146,7 +144,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
     ENDLOOP.
 
     TRY.
-        lr_newstr = cl_abap_structdescr=>create( p_components = lt_comptab ).
+        lr_newstr = cl_abap_structdescr=>create( lt_comptab ).
         DATA(lr_newtab) = cl_abap_tabledescr=>create( p_line_type = lr_newstr ).
 
       CATCH cx_sy_struct_creation.
@@ -154,7 +152,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
     ENDTRY.
 
 
-    CREATE DATA or_result TYPE HANDLE lr_newtab.
+    CREATE DATA mr_result TYPE HANDLE lr_newtab.
 
 
   ENDMETHOD.
@@ -162,7 +160,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
 
   METHOD exclude_tech.
 
-    exclude_fields = VALUE #( ( low = 'REQTSN'     option = 'EQ' sign = 'I' )
+    et_excl_fields = VALUE #( ( low = 'REQTSN'     option = 'EQ' sign = 'I' )
                               ( low = 'REQUEST'    option = 'EQ' sign = 'I' )
                               ( low = 'DATAPAKID'  option = 'EQ' sign = 'I' )
                               ( low = 'RECORD'     option = 'EQ' sign = 'I' )
@@ -179,11 +177,11 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
 
       <lt_result> TYPE STANDARD TABLE.
 
-    ASSIGN or_result->* TO <lt_result>.
+    ASSIGN mr_result->* TO <lt_result>.
 
     <lt_result> = CORRESPONDING #( it_tab ).
 
-    LOOP AT ot_objtab ASSIGNING FIELD-SYMBOL(<ls_objtab>).
+    LOOP AT mt_objtab ASSIGNING FIELD-SYMBOL(<ls_objtab>).
 
       LOOP AT <lt_result> ASSIGNING FIELD-SYMBOL(<ls_result>).
 
@@ -192,10 +190,8 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
         IF <lv_value> IS NOT INITIAL.
 
           <lv_value>  = check_and_replace(
-              EXPORTING
                 iv_data      = <lv_value>
-                iv_iobj_name = <ls_objtab>-iobj_name
-            ).
+                iv_iobj_name = <ls_objtab>-iobj_name ).
 
         ENDIF.
 
