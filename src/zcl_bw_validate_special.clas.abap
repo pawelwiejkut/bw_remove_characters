@@ -32,7 +32,7 @@ PUBLIC
         validated  TYPE boolean,
       END OF ty_iboj_tab.
 
-    TYPES: ty_t_range    TYPE RANGE OF ty_iboj_tab-field_name.
+    TYPES: ty_t_range TYPE RANGE OF ty_iboj_tab-field_name.
 
     DATA:
       mt_objtab TYPE STANDARD TABLE OF ty_iboj_tab,
@@ -44,14 +44,17 @@ PUBLIC
         et_excl_fields TYPE ty_t_range.
 
     METHODS check_and_replace
-      IMPORTING iv_data            TYPE any
-                iv_iobj_name       TYPE string
-      RETURNING VALUE(rv_replaced) TYPE string.
+      IMPORTING iv_data      TYPE any
+                iv_iobj_name TYPE string
+                it_monitor   TYPE rstr_ty_t_monitors
+      EXPORTING
+                et_monitor   TYPE rstr_ty_t_monitors
+                ev_replaced  TYPE string.
 ENDCLASS.
 
 
 
-CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
+CLASS zcl_bw_validate_special IMPLEMENTATION.
 
 
   METHOD check_and_replace.
@@ -78,6 +81,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
           chavl_not_allowed = 1.
 
       IF sy-subrc <> 0.
+        et_monitor = VALUE #( BASE et_monitor ( msgv1 = |Char { lv_current_char } is unsupported and will be removed|  ) ).
         lv_text+lv_index(1) = ''.
       ENDIF.
 
@@ -85,7 +89,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
 
     ENDDO.
 
-    rv_replaced = lv_text.
+    ev_replaced = lv_text.
 
   ENDMETHOD.
 
@@ -119,13 +123,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
         EXPORTING
           i_ddname   = lv_ddname
         IMPORTING
-          e_name     = lv_iobname
-        EXCEPTIONS
-          name_error = 1
-          OTHERS     = 2.
-      IF sy-subrc <> 0.
-        "todo monitor
-      ENDIF.
+          e_name     = lv_iobname.
 
       CALL FUNCTION 'RSD_IOBJ_GET'
         EXPORTING
@@ -133,15 +131,7 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
           i_objvers        = 'A'
         IMPORTING
           e_s_viobj        = ls_viobj
-          e_s_iobj         = ls_iobj
-        EXCEPTIONS
-          iobj_not_found   = 1
-          illegal_input    = 2
-          bct_comp_invalid = 3
-          OTHERS           = 4.
-      IF sy-subrc <> 0.
-        "todo monitor
-      ENDIF.
+          e_s_iobj         = ls_iobj.
 
       APPEND VALUE #( field_name = <ls_comp>-name
                       iobj_name  = lv_iobname
@@ -155,7 +145,6 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
     TRY.
         lr_newstr = cl_abap_structdescr=>create( lt_comptab ).
         DATA(lr_newtab) = cl_abap_tabledescr=>create( p_line_type = lr_newstr ).
-
       CATCH cx_sy_struct_creation.
       CATCH cx_sy_table_creation.
     ENDTRY.
@@ -183,7 +172,6 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
     DATA lv_cursor TYPE cursor.
 
     FIELD-SYMBOLS:
-
       <lt_result> TYPE STANDARD TABLE.
 
     ASSIGN mr_result->* TO <lt_result>.
@@ -198,9 +186,14 @@ CLASS ZCL_BW_VALIDATE_SPECIAL IMPLEMENTATION.
 
         IF <lv_value> IS NOT INITIAL.
 
-          <lv_value>  = check_and_replace(
-                iv_data      = <lv_value>
-                iv_iobj_name = <ls_objtab>-iobj_name ).
+          check_and_replace(
+                       EXPORTING
+                       iv_data      = <lv_value>
+                       iv_iobj_name = <ls_objtab>-iobj_name
+                       it_monitor   = it_monitor
+                       IMPORTING
+                       et_monitor = et_monitor
+                       ev_replaced = <lv_value> ).
 
         ENDIF.
 
