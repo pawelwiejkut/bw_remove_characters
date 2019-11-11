@@ -20,7 +20,7 @@ or other informations like:
 
 ## How it works ?
 
-This development check infoobject based on passed reference table. Best idea is to use this in end routine between flatfile source system and target DSO. You can't use this if your target object is field based instead of inffobect based. If any invaild chartes occurs, it will be automatically replaced by nothig (cuted).
+This development check infoobject based on passed reference table. Best idea is to use this in end routine between flatfile source system and target DSO. You can't use this if your target object is field based instead of inffobect based. If any invaild chartes occurs, it will be automatically replaced by nothig ( cuted off).
 
 ## Why better than other solutions ?
 
