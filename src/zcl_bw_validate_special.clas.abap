@@ -70,7 +70,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
       EXPORTING
         i_chavl           = to_upper( lv_text )
         i_iobjnm          = lv_objnam
-        i_concated_chavl  = rs_c_true
+        i_concated_chavl  = abap_true
       EXCEPTIONS
         chavl_not_allowed = 1.
 
@@ -86,7 +86,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
           EXPORTING
             i_chavl           = lv_current_char
             i_iobjnm          = lv_objnam
-            i_concated_chavl  = rs_c_false
+            i_concated_chavl  = abap_false
           EXCEPTIONS
             chavl_not_allowed = 1.
 
@@ -213,7 +213,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
                        et_monitor  = lt_monitor
                        ev_replaced = <lv_value> ).
 
-          et_monitor = CORRESPONDING #( BASE ( et_monitor )  lt_monitor ).
+          et_monitor = CORRESPONDING #( BASE ( et_monitor ) lt_monitor ).
 
         ENDIF.
 
