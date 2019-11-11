@@ -39,9 +39,8 @@ This implementation addiotionaly:
 2. Add following code into end routine to your trnasformations between flatfile datasource and DSO:
 
 ```ABAP
-DATA(lr_tab) = REF #( result_package ).
-
-DATA(lobj_check) = NEW zcl_bw_validate_special( ir_ref = lr_tab ).
+DATA(lobj_check) = NEW zcl_bw_validate_special(
+ir_ref = REF #( result_package ) ).
 
 lobj_check->validate(
   EXPORTING
