@@ -30,7 +30,7 @@ This development uses standard SAP function module RSKC_CHAVL_OF_IOBJ_CHECK, whi
 
 This implementation addiotionaly:
 
-* prevent you against pass unsupported charters into particular data types, like passing char values to data fields,
+* prevent you against pass unsupported charters into particular data types, like passing char values to date fields,
 * bases on entries that you provided in RSKC transaction
 
 ## Usage instructions:
