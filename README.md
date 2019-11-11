@@ -11,6 +11,7 @@ If you only have frequent data load from flat files in your BW, you know that us
 
 No all special charters defined in BW can be hanlded by infoobjects. Due to that, if user provide unexpected chart, we get an issue in case of data activation in our BW system:
 
+![Issue](https://pawelwiejkut.net/github/bw_remove_charters_issue.png)
 
 ## Usage instructions:
 
