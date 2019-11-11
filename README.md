@@ -33,10 +33,19 @@ This implementation addiotionaly:
 1. Clone code using [ABAP Git](https://github.com/larshp/abapGit) or just copy class,
 2. Add following code into end routine to your trnasformations between flatfile datasource and DSO:
 
-    DATA(lr_tab) = REF #( result_package ).
+'''ABAP
+DATA(lr_tab) = REF #( result_package ).
 
-    DATA(lobj_check) = NEW zcl_bw_validate_special( ir_ref = lr_tab ).
+DATA(lobj_check) = NEW zcl_bw_validate_special( ir_ref = lr_tab ).
 
-    lobj_check->validate( it_tab = result_package ).
+lobj_check->validate(
+  EXPORTING
+    it_tab     =  result_package
+    it_monitor =  monitor
+  IMPORTING
+    et_tab     = result_package
+    et_monitor =  monitor
+).
+'''
 
 3. Use and be happy !
