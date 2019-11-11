@@ -13,6 +13,11 @@ No all special charters defined in BW can be hanlded by infoobjects. Due to that
 
 ![Issue](https://pawelwiejkut.net/github/bw_remove_charters_issue.png)
 
+or other informations like:
+*Value ‘#’ (hex. ‘2300’) of characteristic  contains invalid characters
+*Error when assigning SID: Action VAL_SID_CONVERT InfoObject
+*(hex. ‘500072007A0065006C006500770020006E0061002000720061’) of characteristic  contains inva
+
 ## How it works ?
 
 This development check infoobject based on passed reference table. Best idea is to use this in end routine between flatfile source system and target DSO. You can't use this if your target object is field based instead of inffobect based. 
@@ -25,8 +30,8 @@ This development uses standard SAP function module RSKC_CHAVL_OF_IOBJ_CHECK, whi
 
 This implementation addiotionaly:
 
-* prevent you against pass unsupported charters into particular data types, like passing char values to data fields,
-* bases on entries that you provided in RSKC transaction
+*prevent you against pass unsupported charters into particular data types, like passing char values to data fields,
+*bases on entries that you provided in RSKC transaction
 
 ## Usage instructions:
 
