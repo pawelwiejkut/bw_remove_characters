@@ -48,8 +48,7 @@ lobj_check->validate(
     it_monitor =  monitor
   IMPORTING
     et_tab     = result_package
-    et_monitor =  monitor
-).
+    et_monitor =  monitor ).
 ```
 
 3. Use and be happy !
