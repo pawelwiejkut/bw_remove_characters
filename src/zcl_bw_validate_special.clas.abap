@@ -26,10 +26,8 @@ CLASS zcl_bw_validate_special DEFINITION
 
     TYPES:
       BEGIN OF ty_iboj_tab,
-        tab_name   TYPE string,
         field_name TYPE fieldname,
         iobj_name  TYPE string,
-        validated  TYPE boolean,
       END OF ty_iboj_tab.
 
     TYPES: ty_t_range TYPE RANGE OF ty_iboj_tab-field_name.
@@ -49,7 +47,7 @@ CLASS zcl_bw_validate_special DEFINITION
                 it_monitor   TYPE rstr_ty_t_monitors
       EXPORTING
                 et_monitor   TYPE rstr_ty_t_monitors
-                ev_replaced  TYPE string.
+                ev_replaced  TYPE any.
 ENDCLASS.
 
 
@@ -67,28 +65,44 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
 
     lv_text = iv_data.
     lv_objnam = iv_iobj_name.
-    DATA(lv_length) = strlen( lv_text ).
 
-    DO lv_length TIMES.
+    CALL FUNCTION 'RSKC_CHAVL_OF_IOBJ_CHECK'
+      EXPORTING
+        i_chavl           = to_upper( lv_text )
+        i_iobjnm          = lv_objnam
+        i_concated_chavl  = rs_c_true
+      EXCEPTIONS
+        chavl_not_allowed = 1.
 
-      lv_current_char = lv_text+lv_index(1).
+    IF sy-subrc <> 0.
 
-      CALL FUNCTION 'RSKC_CHAVL_OF_IOBJ_CHECK'
-        EXPORTING
-          i_chavl           = lv_current_char
-          i_iobjnm          = lv_objnam
-        EXCEPTIONS
-          chavl_not_allowed = 1.
+      DATA(lv_length) = strlen( lv_text ).
 
-      IF sy-subrc <> 0.
-        et_monitor =
-            VALUE #( BASE et_monitor ( msgv1 = |Char { lv_current_char } is unsupported and will be removed| ) ).
-        lv_text+lv_index(1) = ''.
-      ENDIF.
+      DO lv_length TIMES.
 
-      lv_index = lv_index + 1.
+        lv_current_char = to_upper( lv_text+lv_index(1) ).
 
-    ENDDO.
+        CALL FUNCTION 'RSKC_CHAVL_OF_IOBJ_CHECK'
+          EXPORTING
+            i_chavl           = lv_current_char
+            i_iobjnm          = lv_objnam
+            i_concated_chavl  = rs_c_false
+          EXCEPTIONS
+            chavl_not_allowed = 1.
+
+        IF sy-subrc <> 0.
+          et_monitor =
+              VALUE #( BASE et_monitor
+               ( msgid = 'VALCHAR' msgty = 'I'
+                 msgv1 = |Char { lv_current_char } of { lv_objnam } is unsupported and will be removed| ) ).
+          lv_text+lv_index(1) = ''.
+        ENDIF.
+
+        lv_index = lv_index + 1.
+
+      ENDDO.
+
+    ENDIF.
 
     ev_replaced = lv_text.
 
@@ -134,9 +148,10 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
           e_s_viobj = ls_viobj
           e_s_iobj  = ls_iobj.
 
+      CHECK ls_iobj-iobjtp = 'CHA'.
+
       APPEND VALUE #( field_name = <ls_comp>-name
-                      iobj_name  = lv_iobname
-                      tab_name   = ls_viobj-chktab ) TO mt_objtab.
+                      iobj_name  = lv_iobname ) TO mt_objtab.
 
       APPEND <ls_comp> TO lt_comptab.
 
@@ -161,6 +176,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
 
     et_excl_fields = VALUE #( ( low = 'REQTSN'     option = 'EQ' sign = 'I' )
                               ( low = 'REQUEST'    option = 'EQ' sign = 'I' )
+                              ( low = 'SID'         option = 'EQ' sign = 'I' )
                               ( low = 'DATAPAKID'  option = 'EQ' sign = 'I' )
                               ( low = 'RECORD'     option = 'EQ' sign = 'I' )
                               ( low = 'RECORDMODE' option = 'EQ' sign = 'I' ) ).
@@ -170,7 +186,8 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
 
   METHOD validate.
 
-    DATA lv_cursor TYPE cursor.
+    DATA: lv_cursor  TYPE cursor,
+          lt_monitor TYPE rstr_ty_t_monitors.
 
     FIELD-SYMBOLS:
       <lt_result> TYPE STANDARD TABLE.
@@ -193,8 +210,10 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
                        iv_iobj_name = <ls_objtab>-iobj_name
                        it_monitor   = it_monitor
                        IMPORTING
-                       et_monitor = et_monitor
+                       et_monitor  = lt_monitor
                        ev_replaced = <lv_value> ).
+
+          et_monitor = CORRESPONDING #( BASE ( et_monitor )  lt_monitor ).
 
         ENDIF.
 

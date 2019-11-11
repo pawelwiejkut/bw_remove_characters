@@ -20,7 +20,7 @@ CLASS ltcl_test_valid IMPLEMENTATION.
 
     DATA(lobj_test) = NEW zcl_bw_validate_special( ir_ref = lr_tab ).
 
-    lobj_test->validate( it_tab = lt_testtab ).
+    lobj_test->validate(  it_tab = lt_testtab ).
 
   ENDMETHOD.
 
