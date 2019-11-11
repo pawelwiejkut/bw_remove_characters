@@ -15,7 +15,7 @@ No all special charters defined in BW can be hanlded by infoobjects. Due to that
 
 ## How it works ?
 
-This development check infoobject based on passed reference table. Best idea is to use this in end routine between flatfile source system and target DSO. You can't use this if your target object is field based instead of inffobect based.
+This development check infoobject based on passed reference table. Best idea is to use this in end routine between flatfile source system and target DSO. You can't use this if your target object is field based instead of inffobect based. 
 
 ## Why better than other solutions ?
 
@@ -31,7 +31,12 @@ This implementation addiotionaly:
 ## Usage instructions:
 
 1. Clone code using [ABAP Git](https://github.com/larshp/abapGit) or just copy class,
-2. Add following code into end routine to your trnasformations between flatfile datasource and DSO,
+2. Add following code into end routine to your trnasformations between flatfile datasource and DSO:
+
+    DATA(lr_tab) = REF #( result_package ).
+
+    DATA(lobj_check) = NEW zcl_bw_validate_special( ir_ref = lr_tab ).
+
+    lobj_check->validate( it_tab = result_package ).
+
 3. Use and be happy !
-
-
