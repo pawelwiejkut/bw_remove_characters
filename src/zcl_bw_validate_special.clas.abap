@@ -28,6 +28,7 @@ CLASS zcl_bw_validate_special DEFINITION
       BEGIN OF ty_iboj_tab,
         field_name TYPE fieldname,
         iobj_name  TYPE string,
+        iobj_type  TYPE string,
       END OF ty_iboj_tab.
 
     TYPES: ty_t_range TYPE RANGE OF ty_iboj_tab-field_name.
@@ -148,10 +149,10 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
           e_s_viobj = ls_viobj
           e_s_iobj  = ls_iobj.
 
-      CHECK ls_iobj-iobjtp = 'CHA'.
 
       APPEND VALUE #( field_name = <ls_comp>-name
-                      iobj_name  = lv_iobname ) TO mt_objtab.
+                      iobj_name  = lv_iobname
+                      iobj_type  = ls_iobj-iobjtp ) TO mt_objtab.
 
       APPEND <ls_comp> TO lt_comptab.
 
@@ -202,7 +203,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
 
         ASSIGN COMPONENT <ls_objtab>-field_name OF STRUCTURE <ls_result> TO FIELD-SYMBOL(<lv_value>).
 
-        IF <lv_value> IS NOT INITIAL.
+        IF <lv_value> IS NOT INITIAL AND <ls_objtab>-iobj_type = 'CHA'.
 
           check_and_replace(
                        EXPORTING
@@ -222,7 +223,6 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
     ENDLOOP.
 
     et_tab = CORRESPONDING #( <lt_result> ).
-
 
   ENDMETHOD.
 ENDCLASS.
