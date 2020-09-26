@@ -24,7 +24,7 @@ This development check infoobject based on passed reference table. Best idea is 
 
 ## Why better than other solutions ?
 
-This development uses standard SAP function module RSKC_CHAVL_OF_IOBJ_CHECK, which basically checks every charter you tring to pass to particular infoobject and confirms is that charter allowed to be used in. Most of avaible implementations check correctness of passed charters based on SAP note [173241](https://launchpad.support.sap.com/#/notes/173241):
+This development uses standard SAP function module RSKC_CHAVL_OF_IOBJ_CHECK, which basically checks every charter you are trying to pass to particular infoobject and confirms is that charter allowed to be used in. Most of avaible implementations check correctness of passed charters based on SAP note [173241](https://launchpad.support.sap.com/#/notes/173241):
 
 !"%&''()*+,-./:;<=>?_0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
 
