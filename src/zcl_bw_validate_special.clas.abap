@@ -39,8 +39,7 @@ CLASS zcl_bw_validate_special DEFINITION
       mr_master TYPE REF TO data.
 
     METHODS exclude_tech
-      EXPORTING
-        et_excl_fields TYPE ty_t_range.
+      RETURNING VALUE(et_excl_fields) TYPE ty_t_range.
 
     METHODS check_and_replace
       IMPORTING iv_data      TYPE any
@@ -127,9 +126,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
     lr_str ?= lr_tab->get_table_line_type( ).
 
 
-    exclude_tech(
-      IMPORTING
-      et_excl_fields = lt_excl_names ).
+    lt_excl_names = exclude_tech( ).
 
 
     LOOP AT lr_str->get_components( ) ASSIGNING FIELD-SYMBOL(<ls_comp>) WHERE name NOT IN lt_excl_names.
