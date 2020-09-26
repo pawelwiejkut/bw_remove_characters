@@ -35,8 +35,7 @@ CLASS zcl_bw_validate_special DEFINITION
 
     DATA:
       mt_objtab TYPE STANDARD TABLE OF ty_iboj_tab,
-      mr_result TYPE REF TO data,
-      mr_master TYPE REF TO data.
+      mr_result TYPE REF TO data.
 
     METHODS exclude_tech
       RETURNING VALUE(et_excl_fields) TYPE ty_t_range.
@@ -184,8 +183,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
 
   METHOD validate.
 
-    DATA: lv_cursor  TYPE cursor,
-          lt_monitor TYPE rstr_ty_t_monitors.
+    DATA: lt_monitor TYPE rstr_ty_t_monitors.
 
     FIELD-SYMBOLS:
       <lt_result> TYPE STANDARD TABLE.
