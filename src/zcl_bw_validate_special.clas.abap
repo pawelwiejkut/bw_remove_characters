@@ -189,7 +189,9 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
       <lt_result> TYPE STANDARD TABLE.
 
     ASSIGN mr_result->* TO <lt_result>.
-
+    IF sy-subrc <> 0.
+      EXIT.
+    ENDIF.
     <lt_result> = CORRESPONDING #( it_tab ).
 
     LOOP AT mt_objtab ASSIGNING FIELD-SYMBOL(<ls_objtab>).
@@ -197,7 +199,9 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
       LOOP AT <lt_result> ASSIGNING FIELD-SYMBOL(<ls_result>).
 
         ASSIGN COMPONENT <ls_objtab>-field_name OF STRUCTURE <ls_result> TO FIELD-SYMBOL(<lv_value>).
-
+        IF sy-subrc <> 0.
+          EXIT.
+        ENDIF.
         IF <lv_value> IS NOT INITIAL AND <ls_objtab>-iobj_type = 'CHA'.
 
           check_and_replace(
