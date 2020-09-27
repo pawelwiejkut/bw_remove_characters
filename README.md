@@ -1,7 +1,7 @@
 
 # Remove special charters in BW transformations
 
-[![YourActionName Actions Status](https://github.com/pawelwiejkut/bw_remove_charters/workflows/CI/badge.svg)(https://github.com/pawelwiejkut/bw_remove_charters/actions)
+[![YourActionName Actions Status](https://github.com/pawelwiejkut/bw_remove_charters/workflows/CI/badge.svg)](https://github.com/pawelwiejkut/bw_remove_charters/actions)
 
 Welcome at github BW tool for remove special charters, fell free to contribute and create pull requests.
 
