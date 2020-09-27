@@ -50,7 +50,6 @@ CLASS zcl_bw_validate_special DEFINITION
 ENDCLASS.
 
 
-
 CLASS zcl_bw_validate_special IMPLEMENTATION.
 
 
@@ -113,20 +112,17 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
     DATA: lr_tab        TYPE REF TO cl_abap_tabledescr,
           lr_str        TYPE REF TO cl_abap_structdescr,
           lt_excl_names TYPE RANGE OF ty_iboj_tab-field_name,
-          lv_iobname    TYPE  rs_char30,
+          lv_iobname    TYPE rs_char30,
           ls_viobj      TYPE rsd_s_viobj,
           ls_iobj       TYPE rsd_s_iobj,
-          lv_ddname     TYPE  rs_char30,
+          lv_ddname     TYPE rs_char30,
           lt_comptab    TYPE cl_abap_structdescr=>component_table,
           lr_newstr     TYPE REF TO cl_abap_datadescr.
-
 
     lr_tab ?= cl_abap_structdescr=>describe_by_data_ref( ir_ref ).
     lr_str ?= lr_tab->get_table_line_type( ).
 
-
     lt_excl_names = exclude_tech( ).
-
 
     LOOP AT lr_str->get_components( ) ASSIGNING FIELD-SYMBOL(<ls_comp>) WHERE name NOT IN lt_excl_names.
 
@@ -145,13 +141,11 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
           e_s_viobj = ls_viobj
           e_s_iobj  = ls_iobj.
 
-
       APPEND VALUE #( field_name = <ls_comp>-name
                       iobj_name  = lv_iobname
                       iobj_type  = ls_iobj-iobjtp ) TO mt_objtab.
 
       APPEND <ls_comp> TO lt_comptab.
-
 
     ENDLOOP.
 
@@ -162,9 +156,7 @@ CLASS zcl_bw_validate_special IMPLEMENTATION.
       CATCH cx_sy_table_creation.
     ENDTRY.
 
-
     CREATE DATA mr_result TYPE HANDLE lr_newtab.
-
 
   ENDMETHOD.
 
