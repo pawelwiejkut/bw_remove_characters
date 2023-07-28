@@ -11,7 +11,8 @@ If you have frequent data load from flat files in your BW, you know that user ca
 
 No all special charters defined in BW can be hanlded by infoobjects. Due to that, if user provide unexpected chart, we get an issue in case of data activation in our BW system:
 
-![Issue]([https://pawelwiejkut.net/github/bw_remove_charters_issue.png](https://pawelwiejkut.dev/bw_remove_charters/1.png])
+
+![Issue](https://pawelwiejkut.dev/bw_remove_charters/1.png)
 
 or other informations like:
 * Value ‘#’ (hex. ‘2300’) of characteristic  contains invalid characters
