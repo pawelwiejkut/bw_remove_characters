@@ -1,7 +1,7 @@
 
-# Remove special charters in BW transformations
+# Remove special characters in BW transformations
 
-Welcome at github BW tool for remove special charters, fell free to contribute and create pull requests.
+Welcome at github BW tool for remove special characters, fell free to contribute and create pull requests.
 
 If you have frequent data load from flat files in your BW, you know that user can provide wrong charters into. To prevent activation error of this data, please use this development in your transformation end routine on the first layer (RSDS->DSO). 
 
